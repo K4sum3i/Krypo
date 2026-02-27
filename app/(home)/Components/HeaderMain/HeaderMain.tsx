@@ -82,7 +82,7 @@ export function HeaderMain() {
             </DropdownMenuContent>
           </DropdownMenu>
           <DialogContent>
-            <DialogHeader>
+            <DialogHeader className="pb-6 flex flex-start justify-between border-b border-border">
               <DialogTitle className="text-lg font-semibold m-0 text-card-foreground">
                 New Password
               </DialogTitle>

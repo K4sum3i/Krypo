@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Noto_Sans } from "next/font/google";
 import "./globals.css";
 import { SidebarProvider } from "@/components/ui/sidebar";
-import { AppSidebar } from "@/components/Shared/Sidebar/AppSidebar";
 
 const notoSans = Noto_Sans({ variable: "--font-sans" });
 
@@ -31,12 +30,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <SidebarProvider>
-          <div className="flex w-full h-screen bg-background">
-            <AppSidebar />
-            {children}
-          </div>
-        </SidebarProvider>
+        <SidebarProvider>{children}</SidebarProvider>
       </body>
     </html>
   );

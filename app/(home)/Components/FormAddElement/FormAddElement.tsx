@@ -20,7 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Copy, Earth, Eye, Shuffle, Star } from "lucide-react";
+import { Copy, Earth, Eye, EyeOff, RefreshCcw } from "lucide-react";
 import { copyClipboard } from "@/lib/copyClipboard";
 import { useState } from "react";
 import { generatePassword } from "@/lib/generatePassword";
@@ -80,7 +80,6 @@ export function FormAddElement() {
 
   const generateRandomPassword = () => {
     const password = generatePassword();
-    console.log(password);
     form.setValue("password", password);
   };
 
@@ -90,7 +89,7 @@ export function FormAddElement() {
 
   return (
     <div className="flex gap-8 overflow-y-auto">
-      <form onSubmit={form.handleSubmit(onSubmit)}>
+      <form className="w-full" onSubmit={form.handleSubmit(onSubmit)}>
         <div className="grid grid-cols-2 gap-10">
           <div className="flex flex-col gap-5 h-full">
             <h3 className="text-sm font-semibold text-foreground uppercase tracking-[0.5px] mb-1">
@@ -163,14 +162,23 @@ export function FormAddElement() {
                     <FieldLabel htmlFor="form-rhf-demo-username">
                       Website URL
                     </FieldLabel>
-                    <Input
-                      {...field}
-                      id="form-rhf-demo-urlWebsite"
-                      aria-invalid={fieldState.invalid}
-                      placeholder="https://"
-                      autoComplete="off"
-                    />
-                    <Earth size={18} onClick={updateUrl} />
+                    <div className="relative">
+                      <Input
+                        {...field}
+                        id="form-rhf-demo-urlWebsite"
+                        aria-invalid={fieldState.invalid}
+                        placeholder="https://"
+                        autoComplete="off"
+                      />
+                      <div className="absolute inset-y-0 right-3 flex items-center gap-2">
+                        <Earth
+                          className="text-muted-foreground cursor-pointer"
+                          size={18}
+                          onClick={updateUrl}
+                        />
+                      </div>
+                    </div>
+
                     {fieldState.invalid && (
                       <FieldError errors={[fieldState.error]} />
                     )}
@@ -198,7 +206,7 @@ export function FormAddElement() {
                         ref={field.ref}
                         onBlur={field.onBlur}
                       >
-                        <SelectValue placeholder="Select directory for your password" />
+                        <SelectValue placeholder="Select a folder..." />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="Social">Social</SelectItem>
@@ -232,7 +240,7 @@ export function FormAddElement() {
                       {...field}
                       id="form-rhf-demo-notes"
                       aria-invalid={fieldState.invalid}
-                      placeholder="Enter notes"
+                      placeholder="Add any additional context or security questions here..."
                       autoComplete="off"
                     />
                     {fieldState.invalid && (
@@ -244,99 +252,138 @@ export function FormAddElement() {
             </FieldGroup>
           </div>
 
-          <FieldGroup>
-            <Controller
-              name="isFavourite"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <Checkbox
-                    checked={field.value}
-                    onCheckedChange={field.onChange}
-                    id="form-rhf-demo-isFavourite"
-                    aria-invalid={fieldState.invalid}
-                  />
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
-                </Field>
-              )}
-            />
-          </FieldGroup>
-
-          <FieldGroup>
-            <Controller
-              name="username"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="form-rhf-demo-username">
-                    Username
-                  </FieldLabel>
-                  <Input
-                    {...field}
-                    id="form-rhf-demo-username"
-                    aria-invalid={fieldState.invalid}
-                    placeholder="Enter username"
-                    autoComplete="off"
-                  />
-                  <Copy
-                    className="cursor-pointer"
-                    size={18}
-                    onClick={() => {
-                      /* NO FUNCIONA EL TOAST */
-                      copyClipboard(field.value);
-                    }}
-                  />
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
-                </Field>
-              )}
-            />
-          </FieldGroup>
-          <FieldGroup>
-            <Controller
-              name="password"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="form-rhf-demo-password">
-                    Password
-                    <Shuffle size={18} onClick={generateRandomPassword} />
-                  </FieldLabel>
-                  <Input
-                    {...field}
-                    type={showPassword ? "text" : "password"}
-                    id="form-rhf-demo-password"
-                    aria-invalid={fieldState.invalid}
-                    placeholder="Enter password"
-                    autoComplete="off"
-                  />
-                  <Eye
-                    className="cursor-pointer"
-                    size={18}
-                    onClick={() => {
-                      setShowPassword(!showPassword);
-                    }}
-                  />
-                  <Copy
-                    className="cursor-pointer"
-                    size={18}
-                    onClick={() => {
-                      /* NO FUNCIONA EL TOAST */
-                      copyClipboard(field.value);
-                    }}
-                  />
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
-                </Field>
-              )}
-            />
-          </FieldGroup>
+          <div className="flex flex-col gap-5 h-full">
+            <h3 className="text-sm font-semibold text-foreground uppercase tracking-[0.5px] mb-1">
+              Credentials
+            </h3>
+            <FieldGroup>
+              <Controller
+                name="isFavourite"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                      id="form-rhf-demo-isFavourite"
+                      aria-invalid={fieldState.invalid}
+                    />
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+            </FieldGroup>
+            <FieldGroup>
+              <Controller
+                name="username"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor="form-rhf-demo-username">
+                      Username
+                    </FieldLabel>
+                    <div className="relative">
+                      <Input
+                        {...field}
+                        id="form-rhf-demo-username"
+                        aria-invalid={fieldState.invalid}
+                        placeholder="Enter username"
+                        autoComplete="off"
+                      />
+                      <div className="absolute inset-y-0 right-3 flex items-center gap-2">
+                        <Copy
+                          className="text-muted-foreground cursor-pointer"
+                          size={18}
+                          onClick={() => {
+                            /* NO FUNCIONA EL TOAST */
+                            copyClipboard(field.value);
+                          }}
+                        />
+                      </div>
+                    </div>
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+            </FieldGroup>
+            <FieldGroup>
+              <Controller
+                name="password"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field className="relative" data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor="form-rhf-demo-password">
+                      Password
+                    </FieldLabel>
+                    <div className="relative">
+                      <Input
+                        {...field}
+                        type={showPassword ? "text" : "password"}
+                        id="form-rhf-demo-password"
+                        aria-invalid={fieldState.invalid}
+                        placeholder="Enter password"
+                        autoComplete="off"
+                      />
+                      <div className="absolute inset-y-0 right-3 flex items-center gap-2">
+                        {showPassword ? (
+                          <EyeOff
+                            className="text-muted-foreground cursor-pointer opacity-100 scale-100"
+                            size={18}
+                            onClick={() => {
+                              setShowPassword(!showPassword);
+                            }}
+                          />
+                        ) : (
+                          <Eye
+                            className="text-muted-foreground cursor-pointer opacity-100 scale-100"
+                            size={18}
+                            onClick={() => {
+                              setShowPassword(!showPassword);
+                            }}
+                          />
+                        )}
+                        <Copy
+                          className="text-muted-foreground cursor-pointer"
+                          size={18}
+                          onClick={() => {
+                            /* NO FUNCIONA EL TOAST */
+                            copyClipboard(field.value);
+                          }}
+                        />
+                      </div>
+                    </div>
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+            </FieldGroup>
+            <Button
+              className="group"
+              onClick={(e) => {
+                e.preventDefault();
+                generateRandomPassword();
+              }}
+            >
+              <div className="w-4 h-4 flex items-center justify-center">
+                <RefreshCcw
+                  size={16}
+                  className="transition-transform duration-300 group-hover:rotate-180"
+                />
+              </div>
+              Auto-Generate Password
+            </Button>
+          </div>
         </div>
-        <Button type="submit">Add Password</Button>
+        <div className="mt-5 py-5 border-t border-border flex justify-end gap-3 bg-background">
+          <Button variant="outline">Cancel</Button>
+          <Button type="submit">Add Password</Button>
+        </div>
       </form>
     </div>
   );
