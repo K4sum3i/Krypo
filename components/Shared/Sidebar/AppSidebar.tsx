@@ -1,11 +1,10 @@
 "use client";
 import { Home, Key, ChartPie, Settings, Trash } from "lucide-react";
 
-import { NavMain, NavUser } from "@/components/Shared/Sidebar/components";
+import { NavMain } from "@/components/Shared/Sidebar/components";
 import {
   Sidebar,
   SidebarContent,
-  SidebarFooter,
   SidebarGroup,
   SidebarGroupLabel,
   SidebarHeader,
@@ -77,9 +76,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           </SidebarMenu>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter>
-        <NavUser user={data.user} />
-      </SidebarFooter>
       <SidebarRail />
       <SidebarRail />
     </Sidebar>
