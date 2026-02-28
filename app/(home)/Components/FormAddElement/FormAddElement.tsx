@@ -28,8 +28,10 @@ import { Checkbox } from "@/components/ui/checkbox";
 import axios from "axios";
 import { sileo } from "sileo";
 import { useRouter } from "next/navigation";
+import { FormAddElementProps } from "./FormAddElement.types";
 
-export function FormAddElement() {
+export function FormAddElement(props: FormAddElementProps) {
+  const { userId } = props;
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
 
@@ -44,7 +46,7 @@ export function FormAddElement() {
       password: "",
       urlWebsite: "",
       notes: "",
-      userId: "asdasdas",
+      userId,
     },
   });
 
@@ -65,7 +67,7 @@ export function FormAddElement() {
         password: "",
         urlWebsite: "",
         notes: "",
-        userId: "asdasdas",
+        userId,
       });
 
       router.refresh();

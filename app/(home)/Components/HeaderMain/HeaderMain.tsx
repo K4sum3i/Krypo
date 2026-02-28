@@ -34,8 +34,10 @@ import {
 import { dataHeaderMain } from "./HeaderMain.data";
 import { useState } from "react";
 import { FormAddElement } from "../FormAddElement";
+import { HeaderMainProps } from "./HeaderMain.types";
 
-export function HeaderMain() {
+export function HeaderMain(props: HeaderMainProps) {
+  const { userId } = props;
   const [typeElement, setTypeElement] = useState<"password" | "folder" | "">();
   const [openDialog, setOpenDialog] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(false);
@@ -100,7 +102,7 @@ export function HeaderMain() {
                 Securely store a new credential in your vault.
               </DialogDescription>
             </DialogHeader>
-            {typeElement === "password" && <FormAddElement />}
+            {typeElement === "password" && <FormAddElement userId={userId} />}
           </DialogContent>
         </Dialog>
         <DropdownMenu>
