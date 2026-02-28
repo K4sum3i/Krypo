@@ -16,10 +16,8 @@ import {
   ChevronDown,
   CreditCard,
   LogOut,
-  Search,
   Sparkles,
 } from "lucide-react";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -35,9 +33,11 @@ import { dataHeaderMain } from "./HeaderMain.data";
 import { useState } from "react";
 import { FormAddElement } from "../FormAddElement";
 import { HeaderMainProps } from "./HeaderMain.types";
+import { Separator } from "@/components/ui/separator";
 
 export function HeaderMain(props: HeaderMainProps) {
-  const { userId } = props;
+  const { userId, username, email } = props;
+
   const [typeElement, setTypeElement] = useState<"password" | "folder" | "">();
   const [openDialog, setOpenDialog] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(false);
@@ -51,14 +51,8 @@ export function HeaderMain(props: HeaderMainProps) {
     <header className="mb-8 h-18 px-8 flex items-center justify-between border-b border-border">
       <div className="flex items-center gap-4">
         <SidebarTrigger className="w-8 h-8 rounded-md flex items-center justify-center text-foreground border border-border bg-background" />
-        <div className="relative w-80">
-          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-          <Input
-            type="text"
-            placeholder="Search passwords..."
-            className="pl-9 bg-input/50 border-transparent shadow-none"
-          />
-        </div>
+        <Separator orientation="vertical" />
+        Nombre de la pagina
       </div>
       <div className="flex items-center gap-4">
         <Dialog open={openDialog} onOpenChange={setOpenDialog}>
@@ -128,8 +122,8 @@ export function HeaderMain(props: HeaderMainProps) {
                   <AvatarFallback className="rounded-lg">CN</AvatarFallback>
                 </Avatar>
                 <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-medium">Manuel</span>
-                  <span className="truncate text-xs">manuel@gmail.com</span>
+                  <span className="truncate font-medium">{username}</span>
+                  <span className="truncate text-xs">{email}</span>
                 </div>
               </div>
             </DropdownMenuLabel>

@@ -65,20 +65,20 @@ export const columns: ColumnDef<ColumnProps>[] = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-32">
-            <DropdownMenuItem>
-              {username && (
-                <span onClick={() => copyItemClipboard(username, "Username")}>
-                  Copy Username
-                </span>
-              )}
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              {password && (
-                <span onClick={() => copyItemClipboard(password, "Password")}>
-                  Copy Password
-                </span>
-              )}
-            </DropdownMenuItem>
+            {username && (
+              <DropdownMenuItem
+                onClick={() => copyItemClipboard(username, "Username")}
+              >
+                <span>Copy Username</span>
+              </DropdownMenuItem>
+            )}
+            {password && (
+              <DropdownMenuItem
+                onClick={() => copyItemClipboard(password, "Password")}
+              >
+                <span>Copy Password</span>
+              </DropdownMenuItem>
+            )}
             <DropdownMenuSub>
               <DropdownMenuSubTrigger>URL(s)</DropdownMenuSubTrigger>
               <DropdownMenuPortal>
@@ -88,20 +88,20 @@ export const columns: ColumnDef<ColumnProps>[] = [
                       Open
                     </Link>
                   </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    {urlWebsite && (
-                      <span
-                        onClick={() => copyItemClipboard(urlWebsite, "Url")}
-                      >
-                        Copy
-                      </span>
-                    )}
-                  </DropdownMenuItem>
+                  {urlWebsite && (
+                    <DropdownMenuItem
+                      onClick={() => copyItemClipboard(urlWebsite, "Url")}
+                    >
+                      <span>Copy</span>
+                    </DropdownMenuItem>
+                  )}
                 </DropdownMenuSubContent>
               </DropdownMenuPortal>
             </DropdownMenuSub>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Edit Entry</DropdownMenuItem>
+            <DropdownMenuItem onClick={onEditElement}>
+              Edit Entry
+            </DropdownMenuItem>
             <DropdownMenuItem>Delete Entry</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
