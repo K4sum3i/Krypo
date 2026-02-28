@@ -28,13 +28,13 @@ const handler = NextAuth({
           },
         });
 
-        if (!user || !user?.hashPassword) {
+        if (!user || !user?.hashedPassword) {
           throw new Error("Invalid credentials");
         }
 
         const isPasswordValid = await compare(
           credentials.password,
-          user.hashPassword,
+          user.hashedPassword,
         );
 
         if (!isPasswordValid) {
