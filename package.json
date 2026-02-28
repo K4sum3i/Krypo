@@ -13,6 +13,7 @@
     "@next-auth/prisma-adapter": "^1.0.7",
     "@prisma/adapter-pg": "^7.4.2",
     "@prisma/client": "^7.4.2",
+    "@tanstack/react-table": "^8.21.3",
     "axios": "^1.13.5",
     "bcrypt": "^6.0.0",
     "class-variance-authority": "^0.7.1",

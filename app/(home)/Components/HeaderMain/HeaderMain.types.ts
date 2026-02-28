@@ -5,3 +5,7 @@ export type DataHeaderMainItemProps = {
   typeElement: TypeElement;
   text: string;
 };
+
+export type HeaderMainProps = {
+  userId: string;
+};
