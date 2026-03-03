@@ -8,6 +8,4 @@ export type DataHeaderMainItemProps = {
 
 export type HeaderMainProps = {
   userId: string;
-  username: string;
-  email: string;
 };

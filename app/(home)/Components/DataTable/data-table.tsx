@@ -1,7 +1,5 @@
 "use client";
 
-import { Element } from "@/lib/generated/prisma/client";
-
 import {
   ColumnDef,
   ColumnFiltersState,

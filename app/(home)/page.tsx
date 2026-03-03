@@ -3,11 +3,13 @@ import { HeaderMain } from "./Components/HeaderMain";
 import { AppSidebar } from "@/components/Shared/Sidebar/AppSidebar";
 import { db } from "@/lib/db";
 import { redirect } from "next/navigation";
-import { TableData } from "./Components/DataTable";
+import { DataTable } from "./Components/DataTable";
+import { Analytics } from "./Components/Analytics";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
+import { TrafficDevice } from "./Components/Analytics/componets/TrafficDevice";
 
 export default async function page() {
   const session = await getServerSession();
-  console.log(session);
 
   if (!session || !session.user?.email) {
     return redirect("/");
@@ -29,38 +31,36 @@ export default async function page() {
   if (!user || !user.username || !user.email || !user.elements) redirect("/");
 
   return (
-    <div className="flex w-full h-screen bg-background">
-      <AppSidebar />
-      <main className="flex-1 flex flex-col bg-background min-w-0">
-        <HeaderMain
-          userId={user?.id}
-          username={user?.username}
-          email={user?.email}
-        />
-        <div className="flex-1 px-8 overflow-y-auto flex flex-col gap-8">
-          <div className="flex flex-col gap-1">
-            <h1 className="text-2xl font-semibold">Dashboard</h1>
-            <p className="text-muted">
-              Here is an overview of your security vault status.
-            </p>
-          </div>
-          <div className="grid grid-cols-3 gap-5">
-            <div className="bg-card border border-border rounded-lg p-5 flex flex-col gap-4">
-              b
+    <SidebarProvider
+      style={
+        {
+          "--sidebar-width": "calc(var(--spacing) * 62)",
+          "--header-height": "calc(var(--spacing) * 12)",
+        } as React.CSSProperties
+      }
+    >
+      <AppSidebar
+        variant="inset"
+        user={{
+          name: user.username,
+          email: user.email,
+          avatar: user.profileImage || "",
+        }}
+      />
+      <SidebarInset>
+        <HeaderMain userId={user?.id} />
+        <div className="flex flex-1 flex-col">
+          <div className="flex flex-1 flex-col gap-2">
+            <div className="flex flex-col gap-4 py-6 md:gap-6 md:py-6">
+              <Analytics />
+              <div className="px-4">
+                <TrafficDevice />
+              </div>
+              <DataTable data={user.elements} />
             </div>
-            <div className="bg-card border border-border rounded-lg p-5 flex flex-col gap-4">
-              b
-            </div>
-            <div className="bg-card border border-border rounded-lg p-5 flex flex-col gap-4">
-              b
-            </div>
-          </div>
-          <div className="">
-            <h2 className="text-lg font-semibold mb-4">Recently Added</h2>
-            <TableData elements={user.elements} />
           </div>
         </div>
-      </main>
-    </div>
+      </SidebarInset>
+    </SidebarProvider>
   );
 }

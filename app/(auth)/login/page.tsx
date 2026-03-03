@@ -1,5 +1,3 @@
-"use client";
-
 import { ShieldCheck } from "lucide-react";
 import { TabsForms } from "./Components/TabsForms";
 import { getServerSession } from "next-auth";

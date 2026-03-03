@@ -1,17 +1,25 @@
 "use client";
-import { Home, Key, ChartPie, Settings, Trash } from "lucide-react";
+import {
+  Trash,
+  ShieldCheck,
+  LayoutDashboard,
+  FolderKey,
+  CreditCard,
+  Mail,
+  Key,
+} from "lucide-react";
 
-import { NavMain } from "@/components/Shared/Sidebar/components";
+import { NavMain, NavUser } from "@/components/Shared/Sidebar/components";
 import {
   Sidebar,
   SidebarContent,
+  SidebarFooter,
   SidebarGroup,
   SidebarGroupLabel,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarRail,
 } from "@/components/ui/sidebar";
 import Link from "next/link";
 
@@ -23,47 +31,61 @@ const data = {
   },
   navMain: [
     {
+      title: "Dashboard",
+      url: "/",
+      icon: LayoutDashboard,
+    },
+    {
       title: "Passwords",
       url: "/passwords",
-      icon: Key,
+      icon: FolderKey,
       items: [
         {
           title: "Logins",
           url: "/passwords/logins",
+          icon: Key,
         },
         {
           title: "eMails",
           url: "/passwords/emails",
+          icon: Mail,
         },
         {
           title: "HomeBanking",
           url: "/passwords/homebanking",
+          icon: CreditCard,
         },
       ],
     },
   ],
 };
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+type AppSidebarProps = React.ComponentProps<typeof Sidebar> & {
+  user: React.ComponentProps<typeof NavUser>["user"];
+};
+
+export function AppSidebar({ user, ...props }: AppSidebarProps) {
   return (
     <Sidebar collapsible="offcanvas" {...props}>
-      <SidebarHeader></SidebarHeader>
+      <SidebarHeader>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              asChild
+              className="data-[slot=sidebar-menu-button]:p-1.5!"
+            >
+              <a href="#">
+                <ShieldCheck className="size-5!" />
+                <span className="text-base font-semibold">Krypo</span>
+              </a>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarHeader>
       <SidebarContent>
-        <SidebarGroup>
-          <SidebarMenu>
-            <SidebarMenuItem>
-              <SidebarMenuButton asChild>
-                <Link href="/">
-                  <Home />
-                  <span>Dashboard</span>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          </SidebarMenu>
-        </SidebarGroup>
         <NavMain items={data.navMain} />
         <SidebarGroup>
-          <SidebarGroupLabel>SYSTEM</SidebarGroupLabel>
+          <SidebarGroupLabel>System</SidebarGroupLabel>
           <SidebarMenu>
             <SidebarMenuItem>
               <SidebarMenuButton asChild>
@@ -76,8 +98,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           </SidebarMenu>
         </SidebarGroup>
       </SidebarContent>
-      <SidebarRail />
-      <SidebarRail />
+      <SidebarFooter>
+        <NavUser user={user} />
+      </SidebarFooter>
     </Sidebar>
   );
 }
