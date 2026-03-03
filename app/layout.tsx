@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Noto_Sans } from "next/font/google";
 import "./globals.css";
-import { SidebarProvider } from "@/components/ui/sidebar";
 import { Toaster } from "sileo";
 
 const notoSans = Noto_Sans({ variable: "--font-sans" });
@@ -27,14 +26,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={notoSans.variable}>
+    <html lang="en" className={`${notoSans.variable} dark`}>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <SidebarProvider>
-          {children}
-          <Toaster position="bottom-right" />
-        </SidebarProvider>
+        {children}
+        <Toaster position="top-center" theme="dark" />
       </body>
     </html>
   );

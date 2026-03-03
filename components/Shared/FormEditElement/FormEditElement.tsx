@@ -11,7 +11,7 @@ import {
   FieldGroup,
   FieldLabel,
 } from "@/components/ui/field";
-import { formSchema } from "./FormAddElement.form";
+import { formSchema } from "./FormEditElement.form";
 import {
   Select,
   SelectContent,
@@ -28,54 +28,41 @@ import { Checkbox } from "@/components/ui/checkbox";
 import axios from "axios";
 import { sileo } from "sileo";
 import { useRouter } from "next/navigation";
-import { FormAddElementProps } from "./FormAddElement.types";
+import { FormEditElementProps } from "./FormEditElement.types";
 
-export function FormAddElement(props: FormAddElementProps) {
-  const { userId, closeDialog } = props;
+export function FormEditElement(props: FormEditElementProps) {
+  const { dataElement } = props;
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      typeElement: "",
-      isFavourite: false,
-      name: "",
-      directory: "",
-      username: "",
-      password: "",
-      urlWebsite: "",
-      notes: "",
-      userId,
+      typeElement: dataElement.typeElement,
+      isFavourite: dataElement.isFavourite,
+      name: dataElement?.name || "",
+      directory: dataElement?.directory || "",
+      username: dataElement?.username || "",
+      password: dataElement?.password || "",
+      urlWebsite: dataElement?.urlWebsite || "",
+      notes: dataElement?.notes || "",
+      userId: dataElement.userId,
     },
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      await axios.post("/api/items", values);
+      await axios.patch(`/api/items/${dataElement.id}`, values);
       sileo.success({
         title: "Success",
-        description: "Item created",
+        description: "Item edited",
       });
 
-      form.reset({
-        typeElement: "",
-        isFavourite: false,
-        name: "",
-        directory: "",
-        username: "",
-        password: "",
-        urlWebsite: "",
-        notes: "",
-        userId,
-      });
-
-      closeDialog();
-      router.refresh();
+      router.push("/");
     } catch (error) {
       sileo.error({
         title: "Error",
-        description: "Failed to create item",
+        description: "Failed to edited item",
       });
     }
   };
@@ -352,6 +339,7 @@ export function FormAddElement(props: FormAddElementProps) {
                           className="text-muted-foreground cursor-pointer"
                           size={18}
                           onClick={() => {
+                            /* NO FUNCIONA EL TOAST */
                             copyClipboard(field.value);
                           }}
                         />

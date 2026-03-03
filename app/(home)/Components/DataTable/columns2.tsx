@@ -1,0 +1,131 @@
+"use client";
+
+import {
+  closestCenter,
+  DndContext,
+  KeyboardSensor,
+  MouseSensor,
+  TouchSensor,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+  type UniqueIdentifier,
+} from "@dnd-kit/core";
+
+import {
+  arrayMove,
+  SortableContext,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuPortal,
+  DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Element } from "@/lib/generated/prisma/client";
+import { ColumnDef } from "@tanstack/react-table";
+import { MoreVertical } from "lucide-react";
+import Link from "next/link";
+import { sileo } from "sileo";
+
+export type ColumnProps = Element;
+
+export const columns: ColumnDef<ColumnProps>[] = [
+  {
+    accessorKey: "name",
+    header: "Name",
+  },
+  {
+    accessorKey: "directory",
+    header: "Directory",
+  },
+  {
+    accessorKey: "urlWebsite",
+    header: "URL",
+  },
+  {
+    accessorKey: "notes",
+    header: "Notes",
+  },
+  {
+    accessorKey: "actions",
+    header: "",
+    cell: ({ row }) => {
+      const password = row.original.password;
+      const username = row.original.username;
+      const urlWebsite = row.original.urlWebsite;
+
+      const onEditElement = () => {
+        window.location.href = `/element/${row.original.id}`;
+      };
+
+      const copyItemClipboard = (item: string, name: string) => {
+        navigator.clipboard.writeText(item);
+        sileo.success({
+          title: `${name} copied`,
+        });
+      };
+
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger>
+            <Button variant="ghost" size="icon">
+              <MoreVertical />
+              <span className="sr-only">Open menu</span>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="w-32">
+            {username && (
+              <DropdownMenuItem
+                onClick={() => copyItemClipboard(username, "Username")}
+              >
+                <span>Copy Username</span>
+              </DropdownMenuItem>
+            )}
+            {password && (
+              <DropdownMenuItem
+                onClick={() => copyItemClipboard(password, "Password")}
+              >
+                <span>Copy Password</span>
+              </DropdownMenuItem>
+            )}
+            <DropdownMenuSub>
+              <DropdownMenuSubTrigger>URL(s)</DropdownMenuSubTrigger>
+              <DropdownMenuPortal>
+                <DropdownMenuSubContent>
+                  <DropdownMenuItem>
+                    <Link href={urlWebsite || "#"} target="_blank">
+                      Open
+                    </Link>
+                  </DropdownMenuItem>
+                  {urlWebsite && (
+                    <DropdownMenuItem
+                      onClick={() => copyItemClipboard(urlWebsite, "Url")}
+                    >
+                      <span>Copy</span>
+                    </DropdownMenuItem>
+                  )}
+                </DropdownMenuSubContent>
+              </DropdownMenuPortal>
+            </DropdownMenuSub>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={onEditElement}>
+              Edit Entry
+            </DropdownMenuItem>
+            <DropdownMenuItem variant="destructive">
+              Delete Entry
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      );
+    },
+  },
+];
