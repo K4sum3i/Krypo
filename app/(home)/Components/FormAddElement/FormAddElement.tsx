@@ -299,7 +299,6 @@ export function FormAddElement(props: FormAddElementProps) {
                           className="text-muted-foreground cursor-pointer"
                           size={18}
                           onClick={() => {
-                            /* NO FUNCIONA EL TOAST */
                             copyClipboard(field.value);
                           }}
                         />

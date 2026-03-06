@@ -203,7 +203,7 @@ const columns: ColumnDef<Element>[] = [
     ),
   },
   {
-    accessorKey: "actions",
+    accessorKey: "Actions",
     cell: ({ row }) => {
       const password = row.original.password;
       const username = row.original.username;
@@ -225,7 +225,6 @@ const columns: ColumnDef<Element>[] = [
           <DropdownMenuTrigger>
             <Button variant="ghost" size="icon">
               <MoreVertical />
-              <span className="sr-only">Open menu</span>
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-32">

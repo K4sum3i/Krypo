@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/dialog";
 
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 import {
