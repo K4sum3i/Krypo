@@ -28,7 +28,7 @@ export default async function page() {
     },
   });
 
-  if (!user || !user.username || !user.email || !user.elements) redirect("/");
+  if (!user || !user.elements) redirect("/");
 
   return (
     <SidebarProvider
@@ -39,14 +39,7 @@ export default async function page() {
         } as React.CSSProperties
       }
     >
-      <AppSidebar
-        variant="inset"
-        user={{
-          name: user.username,
-          email: user.email,
-          avatar: user.profileImage || "",
-        }}
-      />
+      <AppSidebar variant="inset" user={user} />
       <SidebarInset>
         <HeaderMain userId={user?.id} />
         <div className="flex flex-1 flex-col">
