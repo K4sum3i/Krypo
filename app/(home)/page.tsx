@@ -46,9 +46,9 @@ export default async function page() {
           <div className="flex flex-1 flex-col gap-2">
             <div className="flex flex-col gap-4 py-6 md:gap-6 md:py-6">
               <Analytics />
-              <div className="px-4">
+              {/*               <div className="px-4">
                 <TrafficDevice />
-              </div>
+              </div> */}
               <DataTable data={user.elements} />
             </div>
           </div>

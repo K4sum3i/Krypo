@@ -32,17 +32,17 @@ import { User } from "@/lib/generated/prisma/client";
 import {
   Bell,
   CircleUserRound,
-  CreditCard,
-  Link,
   LogOut,
   MoreVertical,
   Palette,
 } from "lucide-react";
 import { signOut } from "next-auth/react";
 import { FormUserEdit } from "../../FormUserEdit/FormUserEdit";
+import { useTheme } from "next-themes";
 
 export function NavUser({ user }: { user: User }) {
   const { isMobile } = useSidebar();
+  const { setTheme } = useTheme();
 
   return (
     <Dialog>
@@ -112,17 +112,24 @@ export function NavUser({ user }: { user: User }) {
                     <DropdownMenuSubContent>
                       <DropdownMenuItem
                         onClick={() => {
-                          document.body.classList.remove("dark");
+                          setTheme("light");
                         }}
                       >
                         Light
                       </DropdownMenuItem>
                       <DropdownMenuItem
                         onClick={() => {
-                          document.body.classList.add("dark");
+                          setTheme("dark");
                         }}
                       >
                         Dark
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => {
+                          setTheme("system");
+                        }}
+                      >
+                        System
                       </DropdownMenuItem>
                     </DropdownMenuSubContent>
                   </DropdownMenuPortal>

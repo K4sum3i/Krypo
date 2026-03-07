@@ -23,6 +23,7 @@ import { useRouter } from "next/navigation";
 export function FormUserEdit(props: FormUserEditProps) {
   const { user } = props;
   const router = useRouter();
+
   const [showUploadPhoto, setShowUploadPhoto] = useState(false);
   const [photoUploaded, setPhotoUploaded] = useState(false);
 
@@ -44,7 +45,7 @@ export function FormUserEdit(props: FormUserEditProps) {
         title: "Profile updated",
       });
 
-      router.refresh();
+      router.push("/");
       setShowUploadPhoto(false);
       setPhotoUploaded(false);
     } catch (error) {

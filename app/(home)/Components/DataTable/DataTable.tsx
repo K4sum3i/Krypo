@@ -70,7 +70,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsContent } from "@/components/ui/tabs";
 import {
   ChevronDown,
   ChevronLeft,
@@ -85,6 +85,14 @@ import {
 import { sileo } from "sileo";
 import Link from "next/link";
 import { Input } from "@/components/ui/input";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { FormEditElement } from "@/components/Shared/FormEditElement/FormEditElement";
 
 function DragHandle({ id }: { id: string }) {
   const { attributes, listeners } = useSortable({
@@ -105,175 +113,178 @@ function DragHandle({ id }: { id: string }) {
   );
 }
 
-const columns: ColumnDef<Element>[] = [
-  {
-    id: "drag",
-    header: () => null,
-    cell: ({ row }) => <DragHandle id={row.original.id} />,
-  },
-  {
-    id: "select",
-    header: ({ table }) => (
-      <div className="flex items-center justify-center">
-        <Checkbox
-          checked={
-            table.getIsAllPageRowsSelected() ||
-            (table.getIsSomePageRowsSelected() && "indeterminate")
-          }
-          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-          aria-label="Select all"
-        />
-      </div>
-    ),
-    cell: ({ row }) => (
-      <div className="flex items-center justify-center">
-        <Checkbox
-          checked={row.getIsSelected()}
-          onCheckedChange={(value) => row.toggleSelected(!!value)}
-          aria-label="Select row"
-        />
-      </div>
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
-    accessorKey: "name",
-    header: "Nombre",
-    cell: ({ row }) => (
-      <div className="font-medium">{row.original.name ?? "—"}</div>
-    ),
-    enableHiding: false,
-  },
-  {
-    accessorKey: "typeElement",
-    header: "Tipo",
-    cell: ({ row }) => (
-      <div className="w-32 capitalize">{row.original.typeElement}</div>
-    ),
-  },
-  {
-    accessorKey: "directory",
-    header: "Directorio",
-    cell: ({ row }) => (
-      <div className="text-muted-foreground truncate max-w-[120px]">
-        {row.original.directory ?? "—"}
-      </div>
-    ),
-  },
-  {
-    accessorKey: "urlWebsite",
-    header: () => <div className="w-full text-center">URL</div>,
-    cell: ({ row }) => (
-      <div className="text-right text-muted-foreground truncate max-w-[140px]">
-        {row.original.urlWebsite ?? "—"}
-      </div>
-    ),
-  },
-  {
-    accessorKey: "username",
-    header: "Usuario",
-    cell: ({ row }) => (
-      <div className="text-muted-foreground truncate max-w-[100px]">
-        {row.original.username ?? "—"}
-      </div>
-    ),
-  },
-  {
-    accessorKey: "password",
-    header: "Password",
-    cell: ({ row }) => {
-      const password = row.original.password;
-      const maskedPassword = password ? "*".repeat(password.length) : "—";
-
-      return (
-        <div className="text-muted-foreground truncate max-w-[100px]">
-          {maskedPassword}
+function getColumns(
+  onEditElement: (element: Element) => void,
+): ColumnDef<Element>[] {
+  return [
+    {
+      id: "drag",
+      header: () => null,
+      cell: ({ row }) => <DragHandle id={row.original.id} />,
+    },
+    {
+      id: "select",
+      header: ({ table }) => (
+        <div className="flex items-center justify-center">
+          <Checkbox
+            checked={
+              table.getIsAllPageRowsSelected() ||
+              (table.getIsSomePageRowsSelected() && "indeterminate")
+            }
+            onCheckedChange={(value) =>
+              table.toggleAllPageRowsSelected(!!value)
+            }
+            aria-label="Select all"
+          />
         </div>
-      );
+      ),
+      cell: ({ row }) => (
+        <div className="flex items-center justify-center">
+          <Checkbox
+            checked={row.getIsSelected()}
+            onCheckedChange={(value) => row.toggleSelected(!!value)}
+            aria-label="Select row"
+          />
+        </div>
+      ),
+      enableSorting: false,
+      enableHiding: false,
     },
-  },
-  {
-    accessorKey: "notes",
-    header: "Notes",
-    cell: ({ row }) => (
-      <div className="text-muted-foreground max-w-[100px]">
-        {row.original.notes ?? "—"}
-      </div>
-    ),
-  },
-  {
-    accessorKey: "Actions",
-    cell: ({ row }) => {
-      const password = row.original.password;
-      const username = row.original.username;
-      const urlWebsite = row.original.urlWebsite;
+    {
+      accessorKey: "name",
+      header: "Nombre",
+      cell: ({ row }) => (
+        <div className="font-medium">{row.original.name ?? "—"}</div>
+      ),
+      enableHiding: false,
+    },
+    {
+      accessorKey: "typeElement",
+      header: "Tipo",
+      cell: ({ row }) => (
+        <div className="w-32 capitalize">{row.original.typeElement}</div>
+      ),
+    },
+    {
+      accessorKey: "directory",
+      header: "Directorio",
+      cell: ({ row }) => (
+        <div className="text-muted-foreground truncate max-w-[120px]">
+          {row.original.directory ?? "—"}
+        </div>
+      ),
+    },
+    {
+      accessorKey: "urlWebsite",
+      header: () => <div className="w-full text-center">URL</div>,
+      cell: ({ row }) => (
+        <div className="text-right text-muted-foreground truncate max-w-[140px]">
+          {row.original.urlWebsite ?? "—"}
+        </div>
+      ),
+    },
+    {
+      accessorKey: "username",
+      header: "Usuario",
+      cell: ({ row }) => (
+        <div className="text-muted-foreground truncate max-w-[100px]">
+          {row.original.username ?? "—"}
+        </div>
+      ),
+    },
+    {
+      accessorKey: "password",
+      header: "Password",
+      cell: ({ row }) => {
+        const password = row.original.password;
+        const maskedPassword = password ? "*".repeat(password.length) : "—";
 
-      const onEditElement = () => {
-        window.location.href = `/element/${row.original.id}`;
-      };
+        return (
+          <div className="text-muted-foreground truncate max-w-[100px]">
+            {maskedPassword}
+          </div>
+        );
+      },
+    },
+    {
+      accessorKey: "notes",
+      header: "Notes",
+      cell: ({ row }) => (
+        <div className="text-muted-foreground max-w-[100px]">
+          {row.original.notes ?? "—"}
+        </div>
+      ),
+    },
+    {
+      accessorKey: "Actions",
+      cell: ({ row }) => {
+        const password = row.original.password;
+        const username = row.original.username;
+        const urlWebsite = row.original.urlWebsite;
 
-      const copyItemClipboard = (item: string, name: string) => {
-        navigator.clipboard.writeText(item);
-        sileo.success({
-          title: `${name} copied`,
-        });
-      };
+        const copyItemClipboard = (item: string, name: string) => {
+          navigator.clipboard.writeText(item);
+          sileo.success({
+            title: `${name} copied`,
+          });
+        };
 
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger>
-            <Button variant="ghost" size="icon">
-              <MoreVertical />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="w-32">
-            {username && (
-              <DropdownMenuItem
-                onClick={() => copyItemClipboard(username, "Username")}
-              >
-                <span>Copy Username</span>
-              </DropdownMenuItem>
-            )}
-            {password && (
-              <DropdownMenuItem
-                onClick={() => copyItemClipboard(password, "Password")}
-              >
-                <span>Copy Password</span>
-              </DropdownMenuItem>
-            )}
-            <DropdownMenuSub>
-              <DropdownMenuSubTrigger>URL(s)</DropdownMenuSubTrigger>
-              <DropdownMenuPortal>
-                <DropdownMenuSubContent>
-                  <DropdownMenuItem>
-                    <Link href={urlWebsite || "#"} target="_blank">
-                      Open
-                    </Link>
-                  </DropdownMenuItem>
-                  {urlWebsite && (
-                    <DropdownMenuItem
-                      onClick={() => copyItemClipboard(urlWebsite, "Url")}
-                    >
-                      <span>Copy</span>
+        return (
+          <DropdownMenu>
+            <DropdownMenuTrigger>
+              <Button variant="ghost" size="icon">
+                <MoreVertical />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-32">
+              {username && (
+                <DropdownMenuItem
+                  onClick={() => copyItemClipboard(username, "Username")}
+                >
+                  <span>Copy Username</span>
+                </DropdownMenuItem>
+              )}
+              {password && (
+                <DropdownMenuItem
+                  onClick={() => copyItemClipboard(password, "Password")}
+                >
+                  <span>Copy Password</span>
+                </DropdownMenuItem>
+              )}
+              <DropdownMenuSub>
+                <DropdownMenuSubTrigger>URL(s)</DropdownMenuSubTrigger>
+                <DropdownMenuPortal>
+                  <DropdownMenuSubContent>
+                    <DropdownMenuItem>
+                      <Link href={urlWebsite || "#"} target="_blank">
+                        Open
+                      </Link>
                     </DropdownMenuItem>
-                  )}
-                </DropdownMenuSubContent>
-              </DropdownMenuPortal>
-            </DropdownMenuSub>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={onEditElement}>
-              Edit Entry
-            </DropdownMenuItem>
-            <DropdownMenuItem variant="destructive">
-              Delete Entry
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
+                    {urlWebsite && (
+                      <DropdownMenuItem
+                        onClick={() => copyItemClipboard(urlWebsite, "Url")}
+                      >
+                        <span>Copy</span>
+                      </DropdownMenuItem>
+                    )}
+                  </DropdownMenuSubContent>
+                </DropdownMenuPortal>
+              </DropdownMenuSub>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem onClick={() => onEditElement(row.original)}>
+                Edit Entry
+              </DropdownMenuItem>
+
+              <DropdownMenuItem variant="destructive">
+                Delete Entry
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        );
+      },
     },
-  },
-];
+  ];
+}
 
 function DraggableRow({ row }: { row: Row<Element> }) {
   const { transform, transition, setNodeRef, isDragging } = useSortable({
@@ -302,6 +313,9 @@ function DraggableRow({ row }: { row: Row<Element> }) {
 
 export function DataTable({ data: initialData }: { data: Element[] }) {
   const [data, setData] = React.useState<Element[]>(() => initialData);
+  const [editingElement, setEditingElement] = React.useState<Element | null>(
+    null,
+  );
   const [rowSelection, setRowSelection] = React.useState({});
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({});
@@ -323,6 +337,11 @@ export function DataTable({ data: initialData }: { data: Element[] }) {
   const dataIds = React.useMemo<UniqueIdentifier[]>(
     () => data?.map(({ id }) => id) || [],
     [data],
+  );
+
+  const columns = React.useMemo(
+    () => getColumns((element) => setEditingElement(element)),
+    [],
   );
 
   const table = useReactTable({
@@ -415,60 +434,79 @@ export function DataTable({ data: initialData }: { data: Element[] }) {
           </DropdownMenu>
         </div>
       </div>
+
       <TabsContent
         value="outline"
         className="relative flex flex-col gap-4 overflow-auto px-4 lg:px-6"
       >
         <div className="overflow-hidden rounded-lg border">
-          <DndContext
-            collisionDetection={closestCenter}
-            modifiers={[restrictToVerticalAxis]}
-            onDragEnd={handleDragEnd}
-            sensors={sensors}
-            id={sortableId}
+          <Dialog
+            open={!!editingElement}
+            onOpenChange={(open) => !open && setEditingElement(null)}
           >
-            <Table>
-              <TableHeader className="sticky top-0 z-10 bg-muted">
-                {table.getHeaderGroups().map((headerGroup) => (
-                  <TableRow key={headerGroup.id}>
-                    {headerGroup.headers.map((header) => {
-                      return (
-                        <TableHead key={header.id} colSpan={header.colSpan}>
-                          {header.isPlaceholder
-                            ? null
-                            : flexRender(
-                                header.column.columnDef.header,
-                                header.getContext(),
-                              )}
-                        </TableHead>
-                      );
-                    })}
-                  </TableRow>
-                ))}
-              </TableHeader>
-              <TableBody className="**:data-[slot=table-cell]:first:w-8">
-                {table.getRowModel().rows?.length ? (
-                  <SortableContext
-                    items={dataIds}
-                    strategy={verticalListSortingStrategy}
-                  >
-                    {table.getRowModel().rows.map((row) => (
-                      <DraggableRow key={row.id} row={row} />
-                    ))}
-                  </SortableContext>
-                ) : (
-                  <TableRow>
-                    <TableCell
-                      colSpan={columns.length}
-                      className="h-24 text-center"
+            <DndContext
+              collisionDetection={closestCenter}
+              modifiers={[restrictToVerticalAxis]}
+              onDragEnd={handleDragEnd}
+              sensors={sensors}
+              id={sortableId}
+            >
+              <Table>
+                <TableHeader className="sticky top-0 z-10 bg-muted">
+                  {table.getHeaderGroups().map((headerGroup) => (
+                    <TableRow key={headerGroup.id}>
+                      {headerGroup.headers.map((header) => {
+                        return (
+                          <TableHead key={header.id} colSpan={header.colSpan}>
+                            {header.isPlaceholder
+                              ? null
+                              : flexRender(
+                                  header.column.columnDef.header,
+                                  header.getContext(),
+                                )}
+                          </TableHead>
+                        );
+                      })}
+                    </TableRow>
+                  ))}
+                </TableHeader>
+                <TableBody className="**:data-[slot=table-cell]:first:w-8">
+                  {table.getRowModel().rows?.length ? (
+                    <SortableContext
+                      items={dataIds}
+                      strategy={verticalListSortingStrategy}
                     >
-                      No results.
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </DndContext>
+                      {table.getRowModel().rows.map((row) => (
+                        <DraggableRow key={row.id} row={row} />
+                      ))}
+                    </SortableContext>
+                  ) : (
+                    <TableRow>
+                      <TableCell
+                        colSpan={columns.length}
+                        className="h-24 text-center"
+                      >
+                        No results.
+                      </TableCell>
+                    </TableRow>
+                  )}
+                </TableBody>
+              </Table>
+            </DndContext>
+            <DialogContent>
+              <DialogHeader className="flex flex-col gap-1.5 border-b border-border pb-4">
+                <DialogTitle className="text-lg font-semibold text-foreground m-0">
+                  Edit
+                </DialogTitle>
+                <DialogDescription className="text-sm text-muted-foreground mb-2">
+                  Update your password details.
+                </DialogDescription>
+              </DialogHeader>
+              {editingElement && (
+                <FormEditElement dataElement={editingElement} />
+              )}
+            </DialogContent>
+          </Dialog>
         </div>
         <div className="flex items-center justify-between px-4">
           <div className="hidden flex-1 text-sm text-muted-foreground lg:flex">

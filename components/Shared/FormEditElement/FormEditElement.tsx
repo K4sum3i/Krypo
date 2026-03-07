@@ -58,7 +58,7 @@ export function FormEditElement(props: FormEditElementProps) {
         description: "Item edited",
       });
 
-      router.push("/");
+      router.refresh();
     } catch (error) {
       sileo.error({
         title: "Error",
@@ -286,7 +286,6 @@ export function FormEditElement(props: FormEditElementProps) {
                           className="text-muted-foreground cursor-pointer"
                           size={18}
                           onClick={() => {
-                            /* NO FUNCIONA EL TOAST */
                             copyClipboard(field.value);
                           }}
                         />
@@ -339,7 +338,6 @@ export function FormEditElement(props: FormEditElementProps) {
                           className="text-muted-foreground cursor-pointer"
                           size={18}
                           onClick={() => {
-                            /* NO FUNCIONA EL TOAST */
                             copyClipboard(field.value);
                           }}
                         />
@@ -370,8 +368,10 @@ export function FormEditElement(props: FormEditElementProps) {
           </div>
         </div>
         <div className="mt-5 py-5 border-t border-border flex justify-end gap-3 bg-background">
-          <Button variant="outline">Cancel</Button>
-          <Button type="submit">Add Password</Button>
+          <Button disabled variant="outline">
+            Cancel
+          </Button>
+          <Button type="submit">Save Changes</Button>
         </div>
       </form>
     </div>
