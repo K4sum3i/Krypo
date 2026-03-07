@@ -1,4 +1,7 @@
-export { default } from "next-auth/middleware";
+import middleware from "next-auth/middleware";
+
+export const proxy = middleware;
+export default middleware;
 
 export const config = {
   matcher: ["/"],
